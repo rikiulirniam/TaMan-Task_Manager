@@ -7,10 +7,19 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 grid grid-cols-3  text-gray-900 dark:text-gray-100">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
+                <div class="p-6">
+                    <select id="sortByStatus" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded  mt-4">
+                        <option value="">All Tasks</option>
+                        <option value="pending">Pending</option>
+                        <option value="progress">In Progress</option>
+                        <option value="done">Completed</option>
+                    </select>
+                    <a href="{{ route("tasks.create") }}" class="btn-create bg-green-500 rounded py-3 px-4">+ New Task </a>
+                </div>
+                <div id="taskContainer" class="p-6 grid grid-cols-3 gap-4 text-gray-900 dark:text-gray-100">
                     @forelse ($tasks as $task)
-                        <div class="border flex flex-col justify-between border-gray-300 dark:border-gray-700 rounded-lg p-4 m-2">
+                        <div class="task-item border flex flex-col justify-between border-gray-300 dark:border-gray-700 rounded-lg p-4" data-status="{{ $task->status }}">
                             <div class="flex items-start justify-between">
                                 <h3 class="text-lg font-semibold mb-2">{{ $task->title }}</h3>
                                 <span class="status text-sm bg-opacity-70 px-3  rounded-full {{ $task->status == 'pending' ? 'bg-yellow-500' : ($task->status == 'progress' ? 'bg-blue-500' : 'bg-green-500') }}">{{ $task->status }}</span>
@@ -33,6 +42,30 @@
                         @empty
                             <p>No tasks available.</p>
                     @endforelse
+                </div>
+            </div>
+
+            <script>
+                document.getElementById('sortByStatus').addEventListener('change', function() {
+                    const selectedStatus = this.value;
+                    const taskItems = document.querySelectorAll('.task-item');
+                    const taskContainer = document.getElementById('taskContainer');
+                    let visibleCount = 0;
+
+                    taskItems.forEach(task => {
+                        if (selectedStatus === '' || task.dataset.status === selectedStatus) {
+                            task.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            task.style.display = 'none';
+                        }
+                    });
+
+                    if (visibleCount === 0) {
+                        taskContainer.innerHTML = '<p>No tasks available.</p>';
+                    }
+                });
+            </script>
                 </div>
             </div>
         </div>

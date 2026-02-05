@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 grid grid-cols-3  text-gray-900 dark:text-gray-100">
-                    @foreach ($tasks as $task)
+                    @forelse ($tasks as $task)
                         <div class="border flex flex-col justify-between border-gray-300 dark:border-gray-700 rounded-lg p-4 m-2">
                             <div class="flex items-start justify-between">
                                 <h3 class="text-lg font-semibold mb-2">{{ $task->title }}</h3>
@@ -29,7 +29,10 @@
                                 </form>
                             </div>
                         </div>
-                    @endforeach
+
+                        @empty
+                            <p>No tasks available.</p>
+                    @endforelse
                 </div>
             </div>
         </div>

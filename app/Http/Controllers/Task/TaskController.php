@@ -14,7 +14,7 @@ class TaskController extends Controller
     public function index()
     {
         // Inertia::render('Tasks/Index');
-        $task = Task::all();
+        $task = Task::where("user_id", auth()->id())->get();
 
         return view('task.index', ["tasks" => $task]);
     }
@@ -57,6 +57,8 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+        $task->user_id != $request->user()->id ? abort(403) : null;
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -71,6 +73,8 @@ class TaskController extends Controller
 
     public function updateStatus(Request $request, Task $task)
     {
+        $task->user_id != $request->user()->id ? abort(403) : null;
+
         if($task->status == "pending"){
             $task->status = "progress";
         } else if($task->status == "progress"){
